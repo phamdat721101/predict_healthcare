@@ -40,14 +40,12 @@ var baseUrl = '.';
       } else {
         $scope.fileName = file.name;
         $scope.hash = 'working...';
-        reader.readAsArrayBuffer(file);
+        reader.readAsText(file);
         reader.onload = function() {
           var newHash = sha256(reader.result);
           var csv = reader.result
-          console.log("Line 47: ", csv)
-
           //convert csv to json
-          let lines = JSON.stringify(csv).split('\n')
+          let lines = csv.split('\n')
           let result = [];
 
           let headers=lines[0].split(',');
@@ -58,14 +56,13 @@ var baseUrl = '.';
             let currentline=lines[i].split(',');
 
             for(let j=0;j<headers.length;j++){
-              obj[headers[j].replace("\r","")] = currentline[j];
+              obj[headers[j].replace("\r","")] = parseInt(currentline[j]);
             }
 
             result.push(obj);           
           }
 
           $scope.data = result;
-          console.log("Line 65: ", $scope.data)
 
           $scope.$apply(function() {   //using the $apply will update the hash after the sha256 finishes otherwise it would wait for a mouse click
             $scope.hash = newHash;
@@ -80,18 +77,14 @@ var baseUrl = '.';
       $scope.alertErrorMsg = '';
 
       //Call API to post data
-      let url  = apiUrl + "/evaluate"
-      const data =   [
-        {"B_min": 119, "B_max": 255, "B_mean": 206.025965960915, "B_std": 62.1221182013079, "B_skew": -0.486756524365576, "B_kurtosis": -1.76220978193435, "B_mode": 255, "B_entropy": 10.8011700340996, "B_energy": 246.603621261814, "G_min": 119, "G_max": 255, "G_mean": 206.025965960915, "G_std": 62.1221182013079, "G_skew": -0.486756524365576, "G_kurtosis": -1.76220978193435, "G_mode": 255, "G_entropy": 10.8011700340996, "G_energy": 246.603621261814, "R_min": 119, "R_max": 255, "R_mean": 206.025965960915, "R_std": 62.1221182013079, "R_skew": -0.486756524365576, "R_energy": 246.603621261814, "h_mean": 0, "v_mean": 206.025965960915, "cb_mean": 128, "cr_mean": 128}, 
-        {"B_min": 119, "B_max": 255, "B_mean": 206.025965960915, "B_std": 62.1221182013079, "B_skew": -0.486756524365576, "B_kurtosis": -1.76220978193435, "B_mode": 255, "B_entropy": 10.8011700340996, "B_energy": 246.603621261814, "G_min": 119, "G_max": 255, "G_mean": 206.025965960915, "G_std": 62.1221182013079, "G_skew": -0.486756524365576, "G_kurtosis": -1.76220978193435, "G_mode": 255, "G_entropy": 10.8011700340996, "G_energy": 246.603621261814, "R_min": 119, "R_max": 255, "R_mean": 206.025965960915, "R_std": 62.1221182013079, "R_skew": -0.486756524365576, "R_energy": 246.603621261814, "h_mean": 0, "v_mean": 206.025965960915, "cb_mean": 128, "cr_mean": 128}
-      ]
+      let url  = apiUrl + "/evaluate"      
       let resp = await fetch(url, 
         {
           method: 'POST', // or 'PUT'
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(data)
+          body: JSON.stringify($scope.data)
         }
       );
       let resultApi = await resp.json();
@@ -230,7 +223,6 @@ var baseUrl = '.';
       }
     });
 
-    console.log('Get the document list');
     $scope.docList = [];
     $http.get(baseUrl + '/listDoc')
     .then(function(response) {
@@ -246,17 +238,13 @@ var baseUrl = '.';
     //Compare model of 2 nodes
     $scope.compare = async function(doc){
       let url  = apiUrl + "/compare"
-      const data =   [
-        {"B_min": 119, "B_max": 255, "B_mean": 206.025965960915, "B_std": 62.1221182013079, "B_skew": -0.486756524365576, "B_kurtosis": -1.76220978193435, "B_mode": 255, "B_entropy": 10.8011700340996, "B_energy": 246.603621261814, "G_min": 119, "G_max": 255, "G_mean": 206.025965960915, "G_std": 62.1221182013079, "G_skew": -0.486756524365576, "G_kurtosis": -1.76220978193435, "G_mode": 255, "G_entropy": 10.8011700340996, "G_energy": 246.603621261814, "R_min": 119, "R_max": 255, "R_mean": 206.025965960915, "R_std": 62.1221182013079, "R_skew": -0.486756524365576, "R_energy": 246.603621261814, "h_mean": 0, "v_mean": 206.025965960915, "cb_mean": 128, "cr_mean": 128}, 
-        {"B_min": 119, "B_max": 255, "B_mean": 206.025965960915, "B_std": 62.1221182013079, "B_skew": -0.486756524365576, "B_kurtosis": -1.76220978193435, "B_mode": 255, "B_entropy": 10.8011700340996, "B_energy": 246.603621261814, "G_min": 119, "G_max": 255, "G_mean": 206.025965960915, "G_std": 62.1221182013079, "G_skew": -0.486756524365576, "G_kurtosis": -1.76220978193435, "G_mode": 255, "G_entropy": 10.8011700340996, "G_energy": 246.603621261814, "R_min": 119, "R_max": 255, "R_mean": 206.025965960915, "R_std": 62.1221182013079, "R_skew": -0.486756524365576, "R_energy": 246.603621261814, "h_mean": 0, "v_mean": 206.025965960915, "cb_mean": 128, "cr_mean": 128}
-      ]
       let resp = await fetch(url, 
         {
           method: 'POST', // or 'PUT'
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(data)
+          body: JSON.stringify([{}])
         }
       );
       let resultApi = await resp.json();
