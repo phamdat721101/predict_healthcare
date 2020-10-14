@@ -169,7 +169,7 @@ func  (t *SimpleChaincode) transferDoc(stub shim.ChaincodeStubInterface, key str
 		poeLogger(errorLevel, "addDoc: Can NOT unMarshal arg")
 		return nil, errors.New("addDoc: Can NOT unMarshal arg")
 	}
-	proof.Owner = arg
+	proof.Name = arg
 	b, err := json.Marshal(proof)
 	if err != nil {
 		poeLogger(errorLevel, "addDoc: Can NOT Marshal arg")

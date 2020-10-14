@@ -22,8 +22,7 @@
         <td>{{doc.Date.Seconds * 1000 + doc.Date.Nanos / 1000000 | date:'medium'}}</td>
         <td><a href="" data-toggle="modal" data-target="#myModal" ng-click="popup(doc.TxID)">{{ doc.TxID  }}</a></td>
         <td>
-          <button class="btn btn-info" ng-click="edit(doc)">Edit</button>
-          <button class="btn btn-danger" ng-click="delete(doc)">Delete</button>
+          <button class="btn btn-info" ng-click="retrain(doc)">Retrain</button>
         </td>
       </tr>
     </tbody>

@@ -240,16 +240,15 @@ var baseUrl = '.';
       let url  = apiUrl + "/compare"
       let resp = await fetch(url, 
         {
-          method: 'POST', // or 'PUT'
+          method: 'GET', // or 'PUT'
           headers: {
             'Content-Type': 'application/json',
-          },
-          body: JSON.stringify([{}])
+          }
         }
       );
       let resultApi = await resp.json();
       let rep = await resultApi;
-      alert("This is the best model: " + rep.best_node)
+      alert("This is the best model: " + rep.worst_node)
     }
 
     // Display the transaction details
@@ -287,8 +286,8 @@ var baseUrl = '.';
       });
     };
 
-    //  Edit a document record.
-    $scope.edit = function(editDoc) {
+    //  Retrain a document record.
+    $scope.retrain = async function(editDoc) {
       var modalInstance = $uibModal.open({
         templateUrl: 'templates/editModal.html',
         controller: 'editModalCtrl',
@@ -299,12 +298,26 @@ var baseUrl = '.';
           }
         }
       });
-      modalInstance.result.then(function(doc) {  //Do this if the user selects the OK button
-        console.log(doc);
+      modalInstance.result.then(async function(doc) {  //Do this if the user selects the OK button
+        let url  = apiUrl + "/retrain"
+        let resp = await fetch(url, 
+          {
+            method: 'POST', // or 'PUT'
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body:JSON.stringify({
+              "best_node": parseInt(doc.Owner)
+            })
+          }
+        );
+        let resultApi = await resp.json();
+        let rep = await resultApi;
+        console.log("Line 320: ", rep.accuracy)
         var params = {
           'hash': doc.Hash,
-          'owner': doc.Owner
-        };
+          'name': rep.accuracy
+        }; 
         $http.post(baseUrl + '/editDoc', params)
         .then(function(response) {
           console.log('document %s has changed', doc.Hash);
@@ -312,6 +325,8 @@ var baseUrl = '.';
           var newList = $scope.docList;
           newList[doc.Hash] = doc;
           $scope.doclist = newList;
+        }).catch(err => {
+          console.log("Line 328: ", err)
         });
       }, function() {
         console.log('Modal dismissed at: ' + new Date());

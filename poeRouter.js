@@ -225,12 +225,10 @@ router.post('/delDoc', function(req, res) {
 router.post('/editDoc', function(req, res) {
   debug('/editDoc request body %j', req.body);
   var appUser = GlobalAppUser[req.session.appUser];
-  var hash = req.body.hash;
-
   var invokeRequest = {
     chaincodeID: poeChaincode.id,
     fcn: 'transferDoc',
-    args: [req.body.hash, req.body.owner],
+    args: [req.body.hash, req.body.name],
     confidential: confidentialSetting
   };
   debug('The invoke args = ', invokeRequest.args);
