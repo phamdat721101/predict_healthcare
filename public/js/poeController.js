@@ -77,6 +77,7 @@ var baseUrl = '.';
       $scope.alertErrorMsg = '';
 
       //Call API to post data
+      console.log("Line 80: ", $scope.data)
       let url  = apiUrl + "/evaluate"      
       let resp = await fetch(url, 
         {
@@ -248,7 +249,7 @@ var baseUrl = '.';
       );
       let resultApi = await resp.json();
       let rep = await resultApi;
-      alert("This is the best model: " + rep.worst_node)
+      alert("This is the best model: " + rep.best_node)
     }
 
     // Display the transaction details
@@ -288,6 +289,14 @@ var baseUrl = '.';
 
     //  Retrain a document record.
     $scope.retrain = async function(editDoc) {
+      console.log("Line 302: ",editDoc.Owner)
+      var user = editDoc.Owner
+      var url  = apiUrl + "/retrain"
+      if(user == "node2@gmail.com"){
+        url  = "http://localhost:6000"  + "/retrain"
+      }else if(user == "node3@gmail.com"){
+        url  = "http://localhost:7000"  + "/retrain"
+      }
       var modalInstance = $uibModal.open({
         templateUrl: 'templates/editModal.html',
         controller: 'editModalCtrl',
@@ -299,7 +308,7 @@ var baseUrl = '.';
         }
       });
       modalInstance.result.then(async function(doc) {  //Do this if the user selects the OK button
-        let url  = apiUrl + "/retrain"
+        console.log("PQD: ", url)
         let resp = await fetch(url, 
           {
             method: 'POST', // or 'PUT'
