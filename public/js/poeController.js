@@ -44,25 +44,26 @@ var baseUrl = '.';
         reader.onload = function() {
           var newHash = sha256(reader.result);
           var csv = reader.result
+          // alert()
           //convert csv to json
-          let lines = csv.split('\n')
-          let result = [];
+          // let lines = csv.split('\n')
+          // let result = [];
 
-          let headers=lines[0].split(',');
+          // let headers=lines[0].split(',');
 
-          for(let i=1;i<lines.length;i++){
+          // for(let i=1;i<lines.length;i++){
 
-            let obj = {};
-            let currentline=lines[i].split(',');
+          //   let obj = {};
+          //   let currentline=lines[i].split(',');
 
-            for(let j=0;j<headers.length;j++){
-              obj[headers[j].replace("\r","")] = parseInt(currentline[j]);
-            }
+          //   for(let j=0;j<headers.length;j++){
+          //     obj[headers[j].replace("\r","")] = parseInt(currentline[j]);
+          //   }
 
-            result.push(obj);           
-          }
+          //   result.push(obj);           
+          // }
 
-          $scope.data = result;
+          $scope.data = reader.result;
 
           $scope.$apply(function() {   //using the $apply will update the hash after the sha256 finishes otherwise it would wait for a mouse click
             $scope.hash = newHash;
@@ -85,7 +86,7 @@ var baseUrl = '.';
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify($scope.data)
+          body: $scope.data
         }
       );
       let resultApi = await resp.json();
