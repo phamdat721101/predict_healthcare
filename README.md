@@ -14,7 +14,7 @@ hash so that its existence can be later proved through transaction queries.
 
 ## Installation
 
-`git clone https://github.com/blocledger/poe-v1.git`
+`git clone https://github.com/phamdat721101/predict_healthcare.git`
 
 `cd poe-v1`
 ```
